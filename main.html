@@ -61,6 +61,12 @@
             display: flex;
             gap: 0.5rem;
         }
+
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 1rem;
+        }
     </style>
 </head>
 
@@ -124,6 +130,11 @@
                                             value="Descripción" id="toggle-Descripción" checked>
                                         <label class="form-check-label" for="toggle-Descripción">Descripción</label>
                                     </div>
+                                    <div class="mt-3">
+                                        <label for="rows-per-page" class="form-label">Filas por página:</label>
+                                        <input type="number" id="rows-per-page" class="form-control" value="20" min="1"
+                                            max="100">
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -145,6 +156,15 @@
                         <!-- Aquí se cargarán los datos -->
                     </tbody>
                 </table>
+
+                <!-- Paginación -->
+                <div class="pagination-container">
+                    <nav>
+                        <ul class="pagination" id="pagination">
+                            <!-- Páginas se generarán dinámicamente -->
+                        </ul>
+                    </nav>
+                </div>
             </div>
             <div class="tab-pane fade" id="componentes">
                 <p>Contenido de Componentes</p>
@@ -167,18 +187,26 @@
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             let materialsData = [];
+            let filteredData = [];
             let currentSortColumn = null;
             let isAscending = true;
+            let currentPage = 1;
+            let rowsPerPage = 20;
 
             // Función para renderizar la tabla
             function renderTable(data) {
                 const tableBody = document.getElementById('materials-table-body');
                 tableBody.innerHTML = ''; // Limpiar tabla
 
-                data.forEach((item, index) => {
+                // Paginación
+                const start = (currentPage - 1) * rowsPerPage;
+                const end = start + rowsPerPage;
+                const paginatedData = data.slice(start, end);
+
+                paginatedData.forEach((item, index) => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                        <td class="text-center">${index + 1}</td>
+                        <td class="text-center">${start + index + 1}</td>
                         <td>${item.ID}</td>
                         <td>${item.Marca}</td>
                         <td>${item.Modelo}</td>
@@ -197,11 +225,14 @@
                         cell.style.display = isVisible ? '' : 'none';
                     });
                 });
+
+                // Actualizar la paginación
+                renderPagination(data.length);
             }
 
             // Función para ordenar los datos
             function sortData(column, isAsc) {
-                materialsData.sort((a, b) => {
+                filteredData.sort((a, b) => {
                     if (a[column] > b[column]) {
                         return isAsc ? 1 : -1;
                     } else if (a[column] < b[column]) {
@@ -210,6 +241,24 @@
                         return 0;
                     }
                 });
+            }
+
+            // Función para renderizar la paginación
+            function renderPagination(totalItems) {
+                const totalPages = Math.ceil(totalItems / rowsPerPage);
+                const pagination = document.getElementById('pagination');
+                pagination.innerHTML = '';
+
+                for (let i = 1; i <= totalPages; i++) {
+                    const li = document.createElement('li');
+                    li.className = `page-item ${i === currentPage ? 'active' : ''}`;
+                    li.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+                    li.addEventListener('click', function () {
+                        currentPage = i;
+                        renderTable(filteredData);
+                    });
+                    pagination.appendChild(li);
+                }
             }
 
             // Función para obtener el índice de la columna por nombre
@@ -228,17 +277,19 @@
                 .then(response => response.json())
                 .then(data => {
                     materialsData = data;
-                    renderTable(materialsData); // Renderizar tabla con datos iniciales
+                    filteredData = data; // Inicialmente, sin filtro
+                    renderTable(filteredData); // Renderizar tabla con datos iniciales
                 })
                 .catch(error => console.error('Error al cargar los materiales:', error));
 
             // Filtrar filas de la tabla
             document.getElementById('filter-input').addEventListener('keyup', function () {
                 const filterText = this.value.toLowerCase();
-                const filteredData = materialsData.filter(item => {
+                filteredData = materialsData.filter(item => {
                     const itemText = Object.values(item).map(value => value.toLowerCase()).join(' ');
                     return itemText.includes(filterText);
                 });
+                currentPage = 1;
                 renderTable(filteredData); // Renderizar tabla con datos filtrados
             });
 
@@ -296,7 +347,7 @@
                     currentSortColumn = column;
 
                     sortData(column, isAscending);
-                    renderTable(materialsData);
+                    renderTable(filteredData);
 
                     // Actualizar estilos de encabezado
                     document.querySelectorAll('.sort-header').forEach(header => {
@@ -304,6 +355,13 @@
                     });
                     this.classList.add(isAscending ? 'sorted-asc' : 'sorted-desc');
                 });
+            });
+
+            // Cambiar el número de filas por página
+            document.getElementById('rows-per-page').addEventListener('change', function () {
+                rowsPerPage = parseInt(this.value, 10);
+                currentPage = 1; // Reiniciar a la primera página
+                renderTable(filteredData);
             });
         });
     </script>
