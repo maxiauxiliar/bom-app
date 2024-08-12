@@ -63,6 +63,23 @@
         </ul>
         <div class="tab-content p-3 border flex-grow-1">
             <div class="tab-pane fade show active" id="materiales">
+
+                <!-- Sección de acciones -->
+                <div class="d-flex justify-content-between mb-3">
+                    <div>
+                        <button id="new-item" class="btn btn-primary me-2">
+                            <i class="bi bi-file-earmark-plus"></i> Nuevo
+                        </button>
+                        <button id="export-json" class="btn btn-success">
+                            <i class="bi bi-file-earmark-arrow-down"></i> Exportar
+                        </button>
+                    </div>
+                    <div>
+                        <input type="text" id="filter-input" class="form-control" placeholder="Filtrar...">
+                    </div>
+                </div>
+
+                <!-- Tabla de materiales -->
                 <table class="table table-bordered table-striped">
                     <thead class="table-dark">
                         <tr>
@@ -92,26 +109,77 @@
         <p>Copyright 2024</p>
     </footer>
 
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
+            let materialsData = [];
+
+            // Función para renderizar la tabla
+            function renderTable(data) {
+                const tableBody = document.getElementById('materials-table-body');
+                tableBody.innerHTML = ''; // Limpiar tabla
+
+                data.forEach((item, index) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td class="text-center">${index + 1}</td>
+                        <td>${item.ID}</td>
+                        <td>${item.Marca}</td>
+                        <td>${item.Modelo}</td>
+                        <td>${item.Descripción}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            }
+
+            // Cargar los datos desde materials.json
             fetch('materials.json')
                 .then(response => response.json())
                 .then(data => {
-                    const tableBody = document.getElementById('materials-table-body');
-                    data.forEach((item, index) => {
-                        const row = document.createElement('tr');
-                        row.innerHTML = `
-                            <td class="text-center">${index + 1}</td>
-                            <td>${item.ID}</td>
-                            <td>${item.Marca}</td>
-                            <td>${item.Modelo}</td>
-                            <td>${item.Descripción}</td>
-                        `;
-                        tableBody.appendChild(row);
-                    });
+                    materialsData = data;
+                    renderTable(materialsData); // Renderizar tabla con datos iniciales
                 })
                 .catch(error => console.error('Error al cargar los materiales:', error));
+
+            // Filtrar filas de la tabla
+            document.getElementById('filter-input').addEventListener('keyup', function () {
+                const filterText = this.value.toLowerCase();
+                const filteredData = materialsData.filter(item => {
+                    const itemText = Object.values(item).map(value => value.toLowerCase()).join(' ');
+                    return itemText.includes(filterText);
+                });
+                renderTable(filteredData); // Renderizar tabla con datos filtrados
+            });
+
+            // Exportar tabla a JSON
+            document.getElementById('export-json').addEventListener('click', function () {
+                const rows = document.querySelectorAll('#materials-table-body tr');
+                const data = Array.from(rows).map(row => {
+                    const cells = row.querySelectorAll('td');
+                    return {
+                        ID: cells[1].textContent,
+                        Marca: cells[2].textContent,
+                        Modelo: cells[3].textContent,
+                        Descripción: cells[4].textContent
+                    };
+                });
+                const json = JSON.stringify(data, null, 2);
+                const blob = new Blob([json], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'materials.json';
+                a.click();
+                URL.revokeObjectURL(url);
+            });
+
+            // Lógica para agregar un nuevo material
+            document.getElementById('new-item').addEventListener('click', function () {
+                alert('Funcionalidad para agregar nuevo material aún no implementada.');
+            });
         });
     </script>
 </body>
