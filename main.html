@@ -42,13 +42,6 @@
         th.sorted-desc::after {
             content: " ▼";
         }
-        .accordion-body {
-            padding: 0;
-        }
-        .btn-group {
-            display: flex;
-            gap: 0.5rem;
-        }
     </style>
 </head>
 <body class="d-flex flex-column">
@@ -69,47 +62,18 @@
         <div class="tab-content p-3 border flex-grow-1">
             <div class="tab-pane fade show active" id="materiales">
 
-                <!-- Sección de acciones con acordeón -->
-                <div class="d-flex flex-column">
-                    <div class="d-flex justify-content-between align-items-center mb-3" id="config-button" style="cursor: pointer;">
-                        <div class="btn-group">
-                            <button class="btn btn-secondary">
-                                <i class="bi bi-gear"></i> Config
-                            </button>
-                            <button id="new-item" class="btn btn-primary">
-                                <i class="bi bi-file-earmark-plus"></i> Nuevo
-                            </button>
-                            <button id="export-json" class="btn btn-success">
-                                <i class="bi bi-file-earmark-arrow-down"></i> Exportar
-                            </button>
-                        </div>
-                        <div>
-                            <input type="text" id="filter-input" class="form-control" placeholder="Filtrar...">
-                        </div>
+                <!-- Sección de acciones -->
+                <div class="d-flex justify-content-between mb-3">
+                    <div>
+                        <button id="new-item" class="btn btn-primary me-2">
+                            <i class="bi bi-file-earmark-plus"></i> Nuevo
+                        </button>
+                        <button id="export-json" class="btn btn-success">
+                            <i class="bi bi-file-earmark-arrow-down"></i> Exportar
+                        </button>
                     </div>
-                    <div id="config-accordion" class="accordion mb-3" style="display: none;">
-                        <div class="accordion-item">
-                            <div id="collapseOne" class="accordion-collapse collapse show">
-                                <div class="accordion-body">
-                                    <div class="form-check">
-                                        <input class="form-check-input column-toggle" type="checkbox" value="ID" id="toggle-ID" checked>
-                                        <label class="form-check-label" for="toggle-ID">ID</label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input column-toggle" type="checkbox" value="Marca" id="toggle-Marca" checked>
-                                        <label class="form-check-label" for="toggle-Marca">Marca</label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input column-toggle" type="checkbox" value="Modelo" id="toggle-Modelo" checked>
-                                        <label class="form-check-label" for="toggle-Modelo">Modelo</label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input column-toggle" type="checkbox" value="Descripción" id="toggle-Descripción" checked>
-                                        <label class="form-check-label" for="toggle-Descripción">Descripción</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <div>
+                        <input type="text" id="filter-input" class="form-control" placeholder="Filtrar...">
                     </div>
                 </div>
 
@@ -169,17 +133,6 @@
                     `;
                     tableBody.appendChild(row);
                 });
-
-                // Actualizar visibilidad de columnas según checkboxes
-                document.querySelectorAll('.column-toggle').forEach(toggle => {
-                    const columnName = toggle.value;
-                    const isVisible = toggle.checked;
-                    const columnIndex = getColumnIndexByName(columnName);
-
-                    document.querySelectorAll(`th:nth-child(${columnIndex}), td:nth-child(${columnIndex})`).forEach(cell => {
-                        cell.style.display = isVisible ? '' : 'none';
-                    });
-                });
             }
 
             // Función para ordenar los datos
@@ -193,17 +146,6 @@
                         return 0;
                     }
                 });
-            }
-
-            // Función para obtener el índice de la columna por nombre
-            function getColumnIndexByName(name) {
-                switch (name) {
-                    case 'ID': return 2;
-                    case 'Marca': return 3;
-                    case 'Modelo': return 4;
-                    case 'Descripción': return 5;
-                    default: return -1;
-                }
             }
 
             // Cargar los datos desde materials.json
@@ -252,22 +194,21 @@
                 alert('Funcionalidad para agregar nuevo material aún no implementada.');
             });
 
-            // Mostrar/ocultar acordeón de configuración al hacer clic en toda la sección de acciones
-            document.getElementById('config-button').addEventListener('click', function() {
-                const accordion = document.getElementById('config-accordion');
-                accordion.style.display = accordion.style.display === 'none' ? 'block' : 'none';
-            });
+            // Lógica para ordenar columnas al hacer clic en los encabezados
+            document.querySelectorAll('.sort-header').forEach(header => {
+                header.addEventListener('click', function() {
+                    const column = this.getAttribute('data-sort');
+                    isAscending = (currentSortColumn === column) ? !isAscending : true;
+                    currentSortColumn = column;
 
-            // Mostrar/ocultar columnas según checkboxes
-            document.querySelectorAll('.column-toggle').forEach(toggle => {
-                toggle.addEventListener('change', function() {
-                    const columnName = this.value;
-                    const isVisible = this.checked;
-                    const columnIndex = getColumnIndexByName(columnName);
+                    sortData(column, isAscending);
+                    renderTable(materialsData);
 
-                    document.querySelectorAll(`th:nth-child(${columnIndex}), td:nth-child(${columnIndex})`).forEach(cell => {
-                        cell.style.display = isVisible ? '' : 'none';
+                    // Actualizar estilos de encabezado
+                    document.querySelectorAll('.sort-header').forEach(header => {
+                        header.classList.remove('sorted-asc', 'sorted-desc');
                     });
+                    this.classList.add(isAscending ? 'sorted-asc' : 'sorted-desc');
                 });
             });
         });
