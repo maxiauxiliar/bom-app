@@ -2,8 +2,7 @@
 <html lang="es">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="viewport" content="width=device-width, initial-scale=1.0">
     <title>Web App Maqueta</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -71,12 +70,28 @@
         .filter-group {
             display: flex;
             gap: 0.5rem;
+            align-items: center;
         }
 
         .filter-group input {
             flex: 1;
             max-width: 200px;
-            /* Establece el ancho máximo a 200px */
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .input-error {
+            border-color: red;
+            background-color: #ffe6e6;
+        }
+
+        .input-valid {
+            border-color: green;
+            background-color: #e6ffe6;
         }
     </style>
 </head>
@@ -116,8 +131,13 @@
                         <div class="filter-group">
                             <input type="text" id="filter-input-1" class="form-control" placeholder="Filtro 1...">
                             <input type="text" id="filter-input-2" class="form-control" placeholder="Filtro 2...">
+                            <button id="clear-filters" class="btn btn-outline-secondary">
+                                <i class="bi bi-eraser"></i>
+                            </button>
                         </div>
                     </div>
+
+                    <!-- Acordeón de Configuración -->
                     <div id="config-accordion" class="accordion mb-3" style="display: none;">
                         <div class="accordion-item">
                             <div id="collapseOne" class="accordion-collapse collapse show">
@@ -142,8 +162,19 @@
                                             value="Descripción" id="toggle-Descripción" checked>
                                         <label class="form-check-label" for="toggle-Descripción">Descripción</label>
                                     </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input column-toggle" type="checkbox" value="Acciones"
+                                            id="toggle-Acciones">
+                                        <label class="form-check-label" for="toggle-Acciones">Acciones</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="toggle-delete-button">
+                                        <label class="form-check-label" for="toggle-delete-button">Mostrar botón
+                                            Eliminar</label>
+                                    </div>
                                     <div class="mt-3">
-                                        <label for="rows-per-page" class="form-label">Filas por página (5 a 100):</label>
+                                        <label for="rows-per-page" class="form-label">Filas por página (5 a
+                                            100):</label>
                                         <input type="number" id="rows-per-page" class="form-control" value="20" min="5"
                                             max="100">
                                     </div>
@@ -151,6 +182,32 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Acordeón de Nuevo Material -->
+                    <div id="new-item-accordion" class="accordion mb-3" style="display: none;">
+                        <div class="accordion-item">
+                            <div id="collapseNewItem" class="accordion-collapse collapse show">
+                                <div class="accordion-body">
+                                    <form id="new-item-form">
+                                        <div class="mb-3">
+                                            <label for="new-marca" class="form-label">Marca</label>
+                                            <input type="text" id="new-marca" class="form-control" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="new-modelo" class="form-label">Modelo</label>
+                                            <input type="text" id="new-modelo" class="form-control" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="new-descripcion" class="form-label">Descripción</label>
+                                            <input type="text" id="new-descripcion" class="form-control" required>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Agregar Material</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
 
                 <!-- Tabla de materiales -->
@@ -162,6 +219,7 @@
                             <th class="text-center sort-header" data-sort="Marca">Marca</th>
                             <th class="text-center sort-header" data-sort="Modelo">Modelo</th>
                             <th class="text-center sort-header" data-sort="Descripción">Descripción</th>
+                            <th class="text-center" id="actions-column-header" style="display: none;">Acciones</th>
                         </tr>
                     </thead>
                     <tbody id="materials-table-body">
@@ -189,7 +247,7 @@
 
     <!-- Footer -->
     <footer class="footer">
-        <p>Copyright 2024</p>
+        <p>Coypright 2024</p>
     </footer>
 
     <!-- Bootstrap Icons -->
@@ -224,6 +282,14 @@
                         <td>${item.Marca}</td>
                         <td>${item.Modelo}</td>
                         <td>${item.Descripción}</td>
+                        <td class="action-buttons" style="display: none;">
+                            <button class="btn btn-danger btn-sm delete-row" style="display: none;">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                            <button class="btn btn-warning btn-sm edit-row">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                        </td>
                     `;
                     tableBody.appendChild(row);
                 });
@@ -236,6 +302,30 @@
 
                     document.querySelectorAll(`th:nth-child(${columnIndex}), td:nth-child(${columnIndex})`).forEach(cell => {
                         cell.style.display = isVisible ? '' : 'none';
+                    });
+                });
+
+                // Mostrar/Ocultar botón de eliminar según checkbox
+                const showDeleteButton = document.getElementById('toggle-delete-button').checked;
+                document.querySelectorAll('.delete-row').forEach(button => {
+                    button.style.display = showDeleteButton ? '' : 'none';
+                });
+
+                // Asociar eventos a los botones de eliminar y editar
+                document.querySelectorAll('.delete-row').forEach((button, index) => {
+                    button.addEventListener('click', function () {
+                        // Obtener el índice correcto en `materialsData` basado en el ítem actual filtrado
+                        const actualIndex = materialsData.findIndex(item => item.ID === filteredData2[start + index].ID);
+                        if (actualIndex !== -1) {
+                            materialsData.splice(actualIndex, 1);  // Elimina el ítem del array original
+                            applyFiltersAndRenderTable();  // Reaplica los filtros y renderiza la tabla
+                        }
+                    });
+                });
+
+                document.querySelectorAll('.edit-row').forEach((button) => {
+                    button.addEventListener('click', function () {
+                        alert('Funcionalidad aún no implementada.');
                     });
                 });
 
@@ -281,6 +371,7 @@
                     case 'Marca': return 3;
                     case 'Modelo': return 4;
                     case 'Descripción': return 5;
+                    case 'Acciones': return 6;
                     default: return -1;
                 }
             }
@@ -298,22 +389,30 @@
 
             // Primer filtro
             document.getElementById('filter-input-1').addEventListener('keyup', function () {
-                const filterText1 = this.value.toLowerCase();
-                filteredData1 = materialsData.filter(item => {
-                    const itemText = Object.values(item).map(value => value.toLowerCase()).join(' ');
-                    return itemText.includes(filterText1);
-                });
-                applySecondFilter(); // Aplicar el segundo filtro sobre el resultado del primer filtro
+                applyFiltersAndRenderTable();
             });
 
             // Segundo filtro
             document.getElementById('filter-input-2').addEventListener('keyup', function () {
-                applySecondFilter(); // Aplicar el segundo filtro sobre el resultado del primer filtro
+                applyFiltersAndRenderTable();
             });
 
-            function applySecondFilter() {
+            // Función para limpiar filtros
+            document.getElementById('clear-filters').addEventListener('click', function () {
+                document.getElementById('filter-input-1').value = '';
+                document.getElementById('filter-input-2').value = '';
+                applyFiltersAndRenderTable();
+            });
+
+            function applyFiltersAndRenderTable() {
+                const filterText1 = document.getElementById('filter-input-1').value.toLowerCase();
                 const filterText2 = document.getElementById('filter-input-2').value.toLowerCase();
                 const visibleColumns = Array.from(document.querySelectorAll('.column-toggle:checked')).map(checkbox => checkbox.value);
+
+                filteredData1 = materialsData.filter(item => {
+                    const itemText = Object.values(item).map(value => value.toLowerCase()).join(' ');
+                    return itemText.includes(filterText1);
+                });
 
                 filteredData2 = filteredData1.filter(item => {
                     return visibleColumns.some(column => item[column].toLowerCase().includes(filterText2));
@@ -322,6 +421,20 @@
                 currentPage = 1;
                 renderTable(filteredData2); // Renderizar tabla con datos filtrados
             }
+
+            // Validación en tiempo real del campo "Modelo"
+            document.getElementById('new-modelo').addEventListener('input', function () {
+                const newModelo = this.value.trim().toLowerCase();
+                const modeloExists = materialsData.some(item => item.Modelo.toLowerCase() === newModelo);
+
+                if (modeloExists) {
+                    this.classList.add('input-error');
+                    this.classList.remove('input-valid');
+                } else {
+                    this.classList.remove('input-error');
+                    this.classList.add('input-valid');
+                }
+            });
 
             // Exportar tabla a JSON
             document.getElementById('export-json').addEventListener('click', function () {
@@ -347,7 +460,46 @@
 
             // Lógica para agregar un nuevo material
             document.getElementById('new-item').addEventListener('click', function () {
-                alert('Funcionalidad para agregar nuevo material aún no implementada.');
+                const accordion = document.getElementById('new-item-accordion');
+                accordion.style.display = accordion.style.display === 'none' ? 'block' : 'none';
+            });
+
+            // Validar y agregar nuevo material
+            document.getElementById('new-item-form').addEventListener('submit', function (event) {
+                event.preventDefault();
+
+                const newMarca = document.getElementById('new-marca').value.trim();
+                const newModelo = document.getElementById('new-modelo').value.trim();
+                const newDescripcion = document.getElementById('new-descripcion').value.trim();
+
+                const modeloExists = materialsData.some(item => item.Modelo.toLowerCase() === newModelo.toLowerCase());
+
+                if (modeloExists) {
+                    document.getElementById('new-modelo').classList.add('input-error');
+                    alert('El modelo ya existe. Por favor, ingresa un modelo diferente.');
+                    return;
+                }
+
+                document.getElementById('new-modelo').classList.remove('input-error');
+                document.getElementById('new-modelo').classList.add('input-valid');
+
+                // Generar un nuevo ID único de 8 caracteres
+                const newID = Math.random().toString(36).substr(2, 8).toUpperCase();
+
+                const newItem = {
+                    ID: newID,
+                    Marca: newMarca,
+                    Modelo: newModelo,
+                    Descripción: newDescripcion
+                };
+
+                materialsData.push(newItem); // Agregar el nuevo ítem a los datos
+                applyFiltersAndRenderTable(); // Reaplicar filtros y renderizar la tabla
+
+                // Limpiar el formulario
+                document.getElementById('new-item-form').reset();
+                document.getElementById('new-item-accordion').style.display = 'none';
+                document.getElementById('new-modelo').classList.remove('input-valid');
             });
 
             // Mostrar/ocultar acordeón de configuración al hacer clic solo en el botón Config
@@ -359,8 +511,24 @@
             // Mostrar/ocultar columnas según checkboxes
             document.querySelectorAll('.column-toggle').forEach(toggle => {
                 toggle.addEventListener('change', function () {
-                    applySecondFilter(); // Reaplicar el segundo filtro cada vez que cambia la visibilidad de columnas
-                    renderTable(filteredData2);
+                    applyFiltersAndRenderTable();
+                });
+            });
+
+            // Mostrar/ocultar la columna de acciones
+            document.getElementById('toggle-Acciones').addEventListener('change', function () {
+                const isVisible = this.checked;
+                document.getElementById('actions-column-header').style.display = isVisible ? '' : 'none';
+                document.querySelectorAll('.action-buttons').forEach(cell => {
+                    cell.style.display = isVisible ? '' : 'none';
+                });
+            });
+
+            // Mostrar/ocultar el botón de eliminar
+            document.getElementById('toggle-delete-button').addEventListener('change', function () {
+                const showDeleteButton = this.checked;
+                document.querySelectorAll('.delete-row').forEach(button => {
+                    button.style.display = showDeleteButton ? '' : 'none';
                 });
             });
 
@@ -382,22 +550,23 @@
                 });
             });
 
-            // Cambiar el número de filas por página
-            document.getElementById('rows-per-page').addEventListener('change', function () {
-                rowsPerPage = parseInt(this.value, 10);
+            // Cambiar el número de filas por página solo al presionar Enter
+            document.getElementById('rows-per-page').addEventListener('keypress', function (event) {
+                if (event.key === 'Enter') {
+                    rowsPerPage = parseInt(this.value, 10);
 
-                // Asegurarse de que el valor esté dentro del rango permitido
-                if (rowsPerPage < 5) {
-                    rowsPerPage = 5;
-                } else if (rowsPerPage > 100) {
-                    rowsPerPage = 100;
+                    // Asegurarse de que el valor esté dentro del rango permitido
+                    if (rowsPerPage < 5) {
+                        rowsPerPage = 5;
+                    } else if (rowsPerPage > 100) {
+                        rowsPerPage = 100;
+                    }
+
+                    this.value = rowsPerPage;  // Actualiza el valor del input si fue necesario
+                    currentPage = 1;  // Reiniciar a la primera página
+                    renderTable(filteredData2);
                 }
-
-                this.value = rowsPerPage;  // Actualiza el valor del input si fue necesario
-                currentPage = 1;  // Reiniciar a la primera página
-                renderTable(filteredData2);
             });
-
         });
     </script>
 </body>
