@@ -1,0 +1,242 @@
+[
+    {
+        "ID": "A1B2C3D4",
+        "Marca": "Siemens",
+        "Modelo": "3RT2016-1BB41",
+        "Descripción": "Contactor S00, 7A"
+    },
+    {
+        "ID": "E5F6G7H8",
+        "Marca": "Siemens",
+        "Modelo": "3RT2026-1BB41",
+        "Descripción": "Contactor S0, 15A"
+    },
+    {
+        "ID": "I9J0K1L2",
+        "Marca": "Siemens",
+        "Modelo": "5SY6100-7",
+        "Descripción": "Térmica 1P, 10A"
+    },
+    {
+        "ID": "M3N4O5P6",
+        "Marca": "Siemens",
+        "Modelo": "5SY6300-7",
+        "Descripción": "Térmica 3P, 30A"
+    },
+    {
+        "ID": "Q7R8S9T0",
+        "Marca": "Siemens",
+        "Modelo": "3RV2011-1KA15",
+        "Descripción": "Guardamotor S00, 0.63-1A"
+    },
+    {
+        "ID": "U1V2W3X4",
+        "Marca": "Siemens",
+        "Modelo": "3RV2021-4KA15",
+        "Descripción": "Guardamotor S0, 1.25-2A"
+    },
+    {
+        "ID": "Y5Z6A7B8",
+        "Marca": "Siemens",
+        "Modelo": "3RT2900-1BB30",
+        "Descripción": "Accesorio para contactor S00"
+    },
+    {
+        "ID": "C9D0E1F2",
+        "Marca": "Siemens",
+        "Modelo": "3RT2910-1BB30",
+        "Descripción": "Accesorio para contactor S0"
+    },
+    {
+        "ID": "G3H4I5J6",
+        "Marca": "Zoloda",
+        "Modelo": "BKF-2.5",
+        "Descripción": "Bornea serie BKF 2.5 mm^2"
+    },
+    {
+        "ID": "K7L8M9N0",
+        "Marca": "Zoloda",
+        "Modelo": "BKNT-T",
+        "Descripción": "Bornea serie BKNT-T"
+    },
+    {
+        "ID": "O1P2Q3R4",
+        "Marca": "Zoloda",
+        "Modelo": "BKF-AC1",
+        "Descripción": "Accesorio para bornea BKF"
+    },
+    {
+        "ID": "S5T6U7V8",
+        "Marca": "Zoloda",
+        "Modelo": "BKNT-AC1",
+        "Descripción": "Accesorio para bornea BKNT-T"
+    },
+    {
+        "ID": "W9X0Y1Z2",
+        "Marca": "Siemens",
+        "Modelo": "3RT2016-1BB42",
+        "Descripción": "Contactor S00, 9A"
+    },
+    {
+        "ID": "A3B4C5D6",
+        "Marca": "Siemens",
+        "Modelo": "3RT2026-1BB42",
+        "Descripción": "Contactor S0, 18A"
+    },
+    {
+        "ID": "E7F8G9H0",
+        "Marca": "Siemens",
+        "Modelo": "5SY6100-8",
+        "Descripción": "Térmica 1P, 16A"
+    },
+    {
+        "ID": "I1J2K3L4",
+        "Marca": "Siemens",
+        "Modelo": "5SY6300-8",
+        "Descripción": "Térmica 3P, 32A"
+    },
+    {
+        "ID": "M5N6O7P8",
+        "Marca": "Siemens",
+        "Modelo": "3RV2011-1KA16",
+        "Descripción": "Guardamotor S00, 0.8-1.2A"
+    },
+    {
+        "ID": "Q9R0S1T2",
+        "Marca": "Siemens",
+        "Modelo": "3RV2021-4KA16",
+        "Descripción": "Guardamotor S0, 1.8-2.5A"
+    },
+    {
+        "ID": "U3V4W5X6",
+        "Marca": "Siemens",
+        "Modelo": "3RT2900-1BB31",
+        "Descripción": "Accesorio para contactor S00, 24V"
+    },
+    {
+        "ID": "Y7Z8A9B0",
+        "Marca": "Siemens",
+        "Modelo": "3RT2910-1BB31",
+        "Descripción": "Accesorio para contactor S0, 24V"
+    },
+    {
+        "ID": "C1D2E3F4",
+        "Marca": "Zoloda",
+        "Modelo": "BKF-4.0",
+        "Descripción": "Bornea serie BKF 4.0 mm^2"
+    },
+    {
+        "ID": "G5H6I7J8",
+        "Marca": "Zoloda",
+        "Modelo": "BKNT-T4",
+        "Descripción": "Bornea serie BKNT-T 4.0 mm^2"
+    },
+    {
+        "ID": "K9L0M1N2",
+        "Marca": "Zoloda",
+        "Modelo": "BKF-AC2",
+        "Descripción": "Accesorio para bornea BKF, 4.0 mm^2"
+    },
+    {
+        "ID": "O3P4Q5R6",
+        "Marca": "Zoloda",
+        "Modelo": "BKNT-AC2",
+        "Descripción": "Accesorio para bornea BKNT-T 4.0 mm^2"
+    },
+    {
+        "ID": "S7T8U9V0",
+        "Marca": "Siemens",
+        "Modelo": "3RT2016-1BB43",
+        "Descripción": "Contactor S00, 12A"
+    },
+    {
+        "ID": "W1X2Y3Z4",
+        "Marca": "Siemens",
+        "Modelo": "3RT2026-1BB43",
+        "Descripción": "Contactor S0, 20A"
+    },
+    {
+        "ID": "A5B6C7D8",
+        "Marca": "Siemens",
+        "Modelo": "5SY6100-9",
+        "Descripción": "Térmica 1P, 20A"
+    },
+    {
+        "ID": "E9F0G1H2",
+        "Marca": "Siemens",
+        "Modelo": "5SY6300-9",
+        "Descripción": "Térmica 3P, 40A"
+    },
+    {
+        "ID": "I3J4K5L6",
+        "Marca": "Siemens",
+        "Modelo": "3RV2011-1KA17",
+        "Descripción": "Guardamotor S00, 1.0-1.6A"
+    },
+    {
+        "ID": "M7N8O9P0",
+        "Marca": "Siemens",
+        "Modelo": "3RV2021-4KA17",
+        "Descripción": "Guardamotor S0, 2.5-3.2A"
+    },
+    {
+        "ID": "Q1R2S3T4",
+        "Marca": "Siemens",
+        "Modelo": "3RT2900-1BB32",
+        "Descripción": "Accesorio para contactor S00, 230V"
+    },
+    {
+        "ID": "U5V6W7X8",
+        "Marca": "Siemens",
+        "Modelo": "3RT2910-1BB32",
+        "Descripción": "Accesorio para contactor S0, 230V"
+    },
+    {
+        "ID": "Y9Z0A1B2",
+        "Marca": "Zoloda",
+        "Modelo": "BKF-6.0",
+        "Descripción": "Bornea serie BKF 6.0 mm^2"
+    },
+    {
+        "ID": "C3D4E5F6",
+        "Marca": "Zoloda",
+        "Modelo": "BKNT-T6",
+        "Descripción": "Bornea serie BKNT-T 6.0 mm^2"
+    },
+    {
+        "ID": "G7H8I9J0",
+        "Marca": "Zoloda",
+        "Modelo": "BKF-AC3",
+        "Descripción": "Accesorio para bornea BKF, 6.0 mm^2"
+    },
+    {
+        "ID": "K1L2M3N4",
+        "Marca": "Zoloda",
+        "Modelo": "BKNT-AC3",
+        "Descripción": "Accesorio para bornea BKNT-T 6.0 mm^2"
+    },
+    {
+        "ID": "O5P6Q7R8",
+        "Marca": "Siemens",
+        "Modelo": "3RT2016-1BB44",
+        "Descripción": "Contactor S00, 16A"
+    },
+    {
+        "ID": "S9T0U1V2",
+        "Marca": "Siemens",
+        "Modelo": "3RT2026-1BB44",
+        "Descripción": "Contactor S0, 22A"
+    },
+    {
+        "ID": "W3X4Y5Z6",
+        "Marca": "Siemens",
+        "Modelo": "5SY6100-10",
+        "Descripción": "Térmica 1P, 25A"
+    },
+    {
+        "ID": "A7B8C9D0",
+        "Marca": "Siemens",
+        "Modelo": "5SY6300-10",
+        "Descripción": "Térmica 3P, 50A"
+    }
+]
